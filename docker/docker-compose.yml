@@ -1,0 +1,54 @@
+version: '3'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper:3.4.6
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka:1.0.0
+    links:
+     - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "customer:5:1"
+#  apache:
+#    build: apache
+#    links:
+#     - order
+#     - shipping
+#     - invoicing
+    ports:
+     - "8080:80"
+  mysql:
+    build: mysql
+    environment:
+     MYSQL_ROOT_PASSWORD: "password"
+     MYSQL_USER: "dbuser"
+     MYSQL_PASSWORD: "dbpass"
+    ports:
+     - "0.0.0.0:3306:3306"
+  customer:
+    build: ../microservice-demo-create-customer
+    links:
+     - kafka
+     - mysql
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+         - "0.0.0.0:8181:8181"
+    depends_on:
+     - mysql
+
+  rdv:
+      build: ../microservice-demo-create-rdv
+      links:
+       - kafka
+       - mysql
+      environment:
+        SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      ports:
+           - "0.0.0.0:8282:8282"
+      depends_on:
+       - mysql
