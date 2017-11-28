@@ -19,8 +19,15 @@ services:
 #     - order
 #     - shipping
 #     - invoicing
+#    ports:
+#     - "8080:80"
+  traefik:
+    build: traefik
     ports:
-     - "8080:80"
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
   mysql:
     build: mysql
     environment:
@@ -31,24 +38,36 @@ services:
      - "0.0.0.0:3306:3306"
   customer:
     build: ../microservice-demo-create-customer
+    restart: on-failure
     links:
      - kafka
      - mysql
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-    ports:
-         - "0.0.0.0:8181:8181"
+    #ports:
+     # - "0.0.0.0:8080:8080"
+    labels:
+      - "traefik.backend=customer"
+      - "traefik.frontend.rule=Host:docker;PathPrefixStrip:/micro-customer/"
+      - "traefik.frontend.entryPoints=http"
+      - "traefik.tags=web"
     depends_on:
      - mysql
 
   rdv:
       build: ../microservice-demo-create-rdv
+      restart: on-failure
       links:
        - kafka
        - mysql
       environment:
         SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      ports:
-           - "0.0.0.0:8282:8282"
+      #ports:
+       # - "0.0.0.0:8181:8080"
+      labels:
+        - "traefik.backend=rdv"
+        - "traefik.frontend.rule=Host:docker;PathPrefixStrip:/micro-rdv/"
+        - "traefik.frontend.entryPoints=http"
+        - "traefik.tags=web"
       depends_on:
        - mysql

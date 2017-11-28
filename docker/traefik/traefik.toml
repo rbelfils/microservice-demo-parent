@@ -1,0 +1,49 @@
+constraints = ["tag==web"]
+#Filtre sur les instances docker
+# Enable Web Dashboard
+[web]
+address = ":8080"
+#address = ":9443"
+#certFile = "/cert/fullchain.pem"
+#keyFile = "/cert/privkey.pem"
+# ReadOnly = false
+#  [web.auth.basic]
+#    usersFile = "/path/to/.htpasswd"
+
+
+defaultEntryPoints = ["http"]
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+
+#[entryPoints]
+#  [entryPoints.http]
+#    [entryPoints.http.redirect]
+#    entryPoint = "https"
+#  [entryPoints.https]
+#  address = ":8443"
+#    [entryPoints.https.tls]
+#      [[entryPoints.https.tls.certificates]]
+#      certFile = "/cert/fullchain.pem"
+#      keyFile = "/cert/privkey.pem"
+
+
+# Enable Docker configuration backend
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "docker"
+#domain = "ceres.germanycentral.cloudapp.microsoftazure.de"
+watch = true
+#exposedbydefault = false
+
+[backends]
+  [backends.customer]
+    [backends.customer.healthcheck]
+        path = "/health"
+        interval = "10s"
+        port = 8080
+  [backends.rdv]
+    [backends.rdv.healthcheck]
+        path = "/health"
+        interval = "10s"
+        port = 8080
