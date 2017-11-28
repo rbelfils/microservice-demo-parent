@@ -1,5 +1,4 @@
-
-#Microservice Kafka Sample
+# Microservice Kafka Sample
 
 
 ```
