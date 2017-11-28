@@ -1,11 +1,4 @@
-# Microservice Kafka Sample
-
-
-```
-enabled: true
-built_in_css: true
-level_classes: [yellow, red, blue, green]
-```
+# Microservices + Kafka Sample
 
 Il s'agit d'une application en lien avec l'auteur principal de certains composant (https://github.com/ewolff/microservice-kafka).
 
