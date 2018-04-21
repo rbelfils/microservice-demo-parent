@@ -5,7 +5,8 @@ services:
     ports:
       - "2181:2181"
   kafka:
-    image: wurstmeister/kafka:1.0.0
+#    image: wurstmeister/kafka:1.0.0
+    image: wurstmeister/kafka:1.1.0
     links:
      - zookeeper
     environment:
