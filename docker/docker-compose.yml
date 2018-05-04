@@ -24,8 +24,8 @@ services:
 #     - "8080:80"
   traefik:
     image: traefik
-#    build: traefik
-    command: -c /dev/null --web --docker --docker.usebindportip --logLevel=INFO
+    build: traefik
+   # command: -c /dev/null --web --docker --docker.usebindportip --logLevel=INFO
     ports:
       - '80:80'
       - '8080:8080'
