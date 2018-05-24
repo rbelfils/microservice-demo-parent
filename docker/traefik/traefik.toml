@@ -3,39 +3,21 @@ constraints = ["tag==web"]
 # Enable Web Dashboard
 [web]
 address = ":8080"
-#address = ":9443"
-#certFile = "/cert/fullchain.pem"
-#keyFile = "/cert/privkey.pem"
-# ReadOnly = false
-#  [web.auth.basic]
-#    usersFile = "/path/to/.htpasswd"
+
 
 
 defaultEntryPoints = ["http"]
 [entryPoints]
   [entryPoints.http]
-  address = ":80"
-
-#[entryPoints]
-#  [entryPoints.http]
-#    [entryPoints.http.redirect]
-#    entryPoint = "https"
-#  [entryPoints.https]
-#  address = ":8443"
-#    [entryPoints.https.tls]
-#      [[entryPoints.https.tls.certificates]]
-#      certFile = "/cert/fullchain.pem"
-#      keyFile = "/cert/privkey.pem"
+   address = ":80"
 
 
 # Enable Docker configuration backend
 [docker]
 endpoint = "unix:///var/run/docker.sock"
-#endpoint = "tcp://127.0.0.1:2375"
 domain = "docker"
-#domain = "ceres.germanycentral.cloudapp.microsoftazure.de"
 watch = true
-#exposedbydefault = false
+swarmmode = true
 
 [backends]
   [backends.customer]
