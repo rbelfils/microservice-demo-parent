@@ -21,6 +21,7 @@ public class RdvController {
     @ResponseBody
     public ResponseEntity<Rdv> createRdv(@RequestBody Rdv resource) {
         Rdv rdv = rdvService.createRdv(resource);
+        //Lien HATEOAS
         rdv.add(linkTo(methodOn(RdvController.class).createRdv(resource)).withSelfRel());
         return new ResponseEntity<Rdv>(rdv, HttpStatus.OK);
     }

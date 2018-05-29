@@ -30,6 +30,10 @@ public class RdvService {
 		return result;
 	}
 
+	/**
+	 * Envoie l'event à kafka producer
+	 * @param rdv
+	 */
 	private void fireOrderCreatedEvent(Rdv rdv) {
 		kafkaTemplate.send("customer", rdv.getRdvId() + "created", rdv.getCustomer());
 	}

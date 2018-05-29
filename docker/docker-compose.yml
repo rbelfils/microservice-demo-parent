@@ -5,7 +5,8 @@ services:
     ports:
       - "2181:2181"
   kafka:
-    image: wurstmeister/kafka:1.0.0
+#    image: wurstmeister/kafka:1.0.0
+    image: wurstmeister/kafka:1.1.0
     links:
      - zookeeper
     environment:
@@ -22,10 +23,12 @@ services:
 #    ports:
 #     - "8080:80"
   traefik:
+    image: traefik
     build: traefik
+   # command: -c /dev/null --web --docker --docker.usebindportip --logLevel=INFO
     ports:
-      - "80:80"
-      - "8080:8080"
+      - '80:80'
+      - '8080:8080'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
   mysql:
