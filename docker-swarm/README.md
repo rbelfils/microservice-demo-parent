@@ -34,3 +34,8 @@ curl -H docker -X GET http://docker:80/micro-customer/customers/1
 phpmyadmin permet de visualiser les ligne
 
 voir les event kafka aussi pour montrer les messages
+
+Maintenance: 
+
+docker service update --label-add "traefik.frontend.rule=Host:docker;PathPrefix:/" demo_maintenance
+docker service update --label-add "traefik.frontend.priority=15" demo_maintenance

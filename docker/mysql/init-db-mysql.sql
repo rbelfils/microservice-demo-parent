@@ -1,3 +1,4 @@
+update user set host='%' where User='root';
 GRANT ALL ON *.* TO 'dbuser'@'%';
 CREATE DATABASE IF NOT EXISTS dbcustomer;
 FLUSH PRIVILEGES;
