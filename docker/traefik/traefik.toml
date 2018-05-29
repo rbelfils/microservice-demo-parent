@@ -6,7 +6,6 @@ logLevel = "DEBUG"
 address = ":8080"
 
 
-
 defaultEntryPoints = ["http"]
 [entryPoints]
   [entryPoints.http]
@@ -15,10 +14,12 @@ defaultEntryPoints = ["http"]
 
 # Enable Docker configuration backend
 [docker]
-  endpoint = "unix:///var/run/docker.sock"
-  domain = "docker"
-  watch = true
-  swarmmode = true
+endpoint = "unix:///var/run/docker.sock"
+#endpoint = "tcp://127.0.0.1:2375"
+domain = "docker"
+#domain = "ceres.germanycentral.cloudapp.microsoftazure.de"
+watch = true
+#exposedbydefault = false
 
 [backends]
   [backends.customer]
