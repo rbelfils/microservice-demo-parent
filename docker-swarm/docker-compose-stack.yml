@@ -16,7 +16,7 @@ services:
     networks:
       - traefik
   traefik:
-    image: traefik:demo
+    image: traefik:swarm
     build: traefik
    # command: -c /dev/null --web --docker --docker.usebindportip --docker.swarmmode --logLevel=DEBUG
     #command: -c /dev/null --web --docker --docker.swarmmode --logLevel=DEBUG
@@ -30,11 +30,12 @@ services:
       - traefik
   mysql:
     build: mysql
-    image: mysql:demo
+    image: mysql:swarm
     environment:
      MYSQL_ROOT_PASSWORD: "password"
      MYSQL_USER: "dbuser"
      MYSQL_PASSWORD: "dbpass"
+     MYSQL_ROOT_HOST: "%"
     networks:
       - traefik
   phpmyadmin:
@@ -55,13 +56,13 @@ services:
   adminer:
     image: adminer
     networks:
-      - traefik	
+     - traefik
     ports:
       - "8383:8080"
 
   customer:
     build: ../microservice-demo-create-customer
-    image: customer:demo 
+    image: customer:swarm 
     restart: on-failure
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
@@ -83,7 +84,7 @@ services:
       - traefik
   rdv:
     build: ../microservice-demo-create-rdv
-    image: rdv:demo
+    image: rdv:swarm
     restart: on-failure
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092

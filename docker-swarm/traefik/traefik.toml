@@ -1,4 +1,5 @@
 constraints = ["tag==web"]
+logLevel = "DEBUG"
 #Filtre sur les instances docker
 # Enable Web Dashboard
 [web]
