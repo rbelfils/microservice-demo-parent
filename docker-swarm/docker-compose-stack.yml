@@ -91,7 +91,7 @@ services:
       labels:
        - "traefik.port=8080"
        - "traefik.backend=customer"
-       - "traefik.frontend.rule=Host:docker;PathPrefixStrip:/micro-customer/"
+       - "traefik.frontend.rule=Host:docker,*direct.labs.play-with-docker.com;PathPrefixStrip:/micro-customer/"
        - "traefik.frontend.entryPoints=http"
        - "traefik.tags=web"
        - "traefik.backend.healthcheck.path=/health"
@@ -112,7 +112,7 @@ services:
       labels:
        - "traefik.port=8080"
        - "traefik.backend=rdv"
-       - "traefik.frontend.rule=Host:docker;PathPrefixStrip:/micro-rdv/"
+       - "traefik.frontend.rule=Host:docker,*direct.labs.play-with-docker.com;PathPrefixStrip:/micro-rdv/"
        - "traefik.frontend.entryPoints=http"
        - "traefik.tags=web"
        - "traefik.frontend.priority=10"
@@ -140,7 +140,7 @@ services:
       labels:
        - "traefik.port=80"
        - "traefik.backend=maintenance"
-       - "traefik.frontend.rule=Host:docker;PathPrefix:/"
+       - "traefik.frontend.rule=Host:docker,*direct.labs.play-with-docker.com;PathPrefix:/"
        - "traefik.frontend.entryPoints=http"
        - "traefik.tags=web"
        - "traefik.frontend.priority=5"
