@@ -4,7 +4,7 @@ services:
     image: wurstmeister/zookeeper:3.4.6
     deploy:
       placement:
-        constraints: [node.role == worker] 
+#        constraints: [node.role == worker] 
     networks:
       - traefik
   kafka:
@@ -13,7 +13,7 @@ services:
      - zookeeper
     deploy:
       placement:
-        constraints: [node.role == worker] 
+ #       constraints: [node.role == worker] 
     environment:
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ADVERTISED_PORT: 9092
@@ -26,7 +26,7 @@ services:
     build: traefik
     deploy:
       placement:
-        constraints: [node.role == manager] 
+ #       constraints: [node.role == manager] 
    # command: -c /dev/null --web --docker --docker.usebindportip --docker.swarmmode --logLevel=DEBUG
     #command: -c /dev/null --web --docker --docker.swarmmode --logLevel=DEBUG
     ports:
@@ -55,7 +55,7 @@ services:
     # docker pull phpmyadmin/phpmyadmin:latest
     deploy:
       placement:
-      constraints: [node.role == worker] 
+ #     constraints: [node.role == worker] 
     environment:
      # PMA_ARBITRARY: 1
      PMA_HOST: mysql
@@ -72,7 +72,7 @@ services:
     image: adminer
     deploy:
       placement:
-        constraints: [node.role == worker] 
+#        constraints: [node.role == worker] 
     networks:
      - traefik
     ports:
@@ -131,7 +131,7 @@ services:
      - "8181:8080"
     deploy:
       placement:
-        constraints: [node.role == manager] 
+#        constraints: [node.role == manager] 
     networks:
      - webgateway
   maintenance:
@@ -145,7 +145,7 @@ services:
        - "traefik.tags=web"
        - "traefik.frontend.priority=5"
       placement:
-        constraints: [node.role == worker] 
+#        constraints: [node.role == worker] 
     networks:
       - traefik
    
