@@ -42,7 +42,7 @@ services:
     image: mysql:swarm
     deploy:
       placement:
-        constraints: [node.role == worker] 
+#        constraints: [node.role == worker] 
     environment:
      MYSQL_ROOT_PASSWORD: "password"
      MYSQL_USER: "dbuser"
@@ -55,7 +55,7 @@ services:
     # docker pull phpmyadmin/phpmyadmin:latest
     deploy:
       placement:
-        constraints: [node.role == worker] 	
+      constraints: [node.role == worker] 
     environment:
      # PMA_ARBITRARY: 1
      PMA_HOST: mysql
@@ -99,7 +99,7 @@ services:
        - "traefik.backend.healthcheck.interval=5s"
        - "traefik.frontend.priority=10"
       placement:
-        constraints: [node.role == worker] 
+ #       constraints: [node.role == worker] 
     networks:
       - traefik
   rdv:
@@ -117,7 +117,7 @@ services:
        - "traefik.tags=web"
        - "traefik.frontend.priority=10"
       placement:
-        constraints: [node.role == worker] 
+#        constraints: [node.role == worker] 
     networks:
       - traefik
     depends_on:
