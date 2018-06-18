@@ -27,15 +27,20 @@ curl -H docker -d '{
           "firstname" : "Romain",
             "email" : "romain.belfils@gmail.com"
     }
-}' -H "Content-Type: application/json" -X POST http://docker:80/micro-rdv/rdvs
+}' -H "Content-Type: application/json" -X POST http://<url>/micro-rdv/rdvs
 
-curl -H docker -X GET http://docker:80/micro-customer/customers/1
+curl GET http://<url>/micro-customer/customers/1
 
-phpmyadmin permet de visualiser les ligne
+phpmyadmin ou adminer port 8383 permet de visualiser les ligne
 
-voir les event kafka aussi pour montrer les messages
+voir les event kafka aussi pour montrer les messages:
+  Lecture kafka topic : 
+	Se connecter au conteneur :
+		docker exec -it <nom_conteneur> /bin/sh
+	puis en console :
+		kafka-console-consumer.sh --topic customer --group keyteo --bootstrap-server kafka:9092
 
 Maintenance: 
 
-docker service update --label-add "traefik.frontend.rule=Host:docker;PathPrefix:/" demo_maintenance
-docker service update --label-add "traefik.frontend.priority=15" demo_maintenance
+	docker service update --label-add "traefik.frontend.rule=PathPrefix:/" demo_maintenance
+	docker service update --label-add "traefik.frontend.priority=15" demo_maintenance
