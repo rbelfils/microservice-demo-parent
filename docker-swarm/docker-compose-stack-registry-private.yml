@@ -1,0 +1,159 @@
+version: '3.4'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper:3.4.6
+    # deploy:
+      # placement:
+#        constraints: [node.role == worker] 
+    networks:
+      - traefik
+  kafka:
+    image: wurstmeister/kafka:1.1.0
+    links:
+     - zookeeper
+    # deploy:
+      # placement:
+ #       constraints: [node.role == worker] 
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "customer:5:1"
+    networks:
+      - traefik
+  traefik:
+    image: localhost:5000/traefik:swarm
+    build: traefik
+    deploy:
+      placement:
+        constraints: [node.role == manager] 
+   # command: -c /dev/null --web --docker --docker.usebindportip --docker.swarmmode --logLevel=DEBUG
+    #command: -c /dev/null --web --docker --docker.swarmmode --logLevel=DEBUG
+    ports:
+      - '80:80'
+      - '8080:8080'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - webgateway
+      - traefik
+  mysql:
+    build: mysql
+    image: localhost:5000/mysql:swarm
+    deploy:
+      placement:
+        constraints: [node.role == worker] 
+    environment:
+     MYSQL_ROOT_PASSWORD: "password"
+     MYSQL_USER: "dbuser"
+     MYSQL_PASSWORD: "dbpass"
+     MYSQL_ROOT_HOST: "%"
+    networks:
+      - traefik
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    # docker pull phpmyadmin/phpmyadmin:latest
+    # deploy:
+      # placement:
+ #     constraints: [node.role == worker] 
+    environment:
+     # PMA_ARBITRARY: 1
+     PMA_HOST: mysql
+     MYSQL_USER: dbuser
+     MYSQL_PASSWORD: dbpass
+     MYSQL_ROOT_PASSWORD: password
+     # PMA_USER: admin
+     # PMA_PASSWORD: admin
+    networks:
+      - traefik
+    ports:
+      - "8282:8080"
+  adminer:
+    image: adminer
+    # deploy:
+      # placement:
+#        constraints: [node.role == worker] 
+    networks:
+     - traefik
+    ports:
+      - "8383:8080"
+
+  customer:
+    build: ../microservice-demo-create-customer
+    image: localhost:5000/customer:swarm 
+    restart: on-failure
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    depends_on:
+     - mysql
+    deploy:
+      replicas: 1
+      labels:
+       - "traefik.port=8080"
+       - "traefik.backend=customer"
+       - "traefik.frontend.rule=PathPrefixStrip:/micro-customer/"
+       - "traefik.frontend.entryPoints=http"
+       - "traefik.tags=web"
+       - "traefik.backend.healthcheck.path=/health"
+       - "traefik.backend.healthcheck.port=8080"
+       - "traefik.backend.healthcheck.interval=5s"
+       - "traefik.frontend.priority=10"
+      placement:
+        constraints: [node.role == worker] 
+    networks:
+      - traefik
+  rdv:
+    build: ../microservice-demo-create-rdv
+    image: localhost:5000/rdv:swarm
+    restart: on-failure
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    deploy:
+      labels:
+       - "traefik.port=8080"
+       - "traefik.backend=rdv"
+       - "traefik.frontend.rule=PathPrefixStrip:/micro-rdv/"
+       - "traefik.frontend.entryPoints=http"
+       - "traefik.tags=web"
+       - "traefik.frontend.priority=10"
+      placement:
+        constraints: [node.role == worker] 
+    networks:
+      - traefik
+    depends_on:
+     - mysql
+  viz:
+    image: dockersamples/visualizer:latest
+    # docker pull dockersamples/visualizer:latest
+    volumes:
+     - "/var/run/docker.sock:/var/run/docker.sock"
+    ports:
+     - "8181:8080"
+    deploy:
+      placement:
+        constraints: [node.role == manager] 
+    networks:
+     - webgateway
+  maintenance:
+    image: localhost:5000/nginx:maintenance
+    deploy:
+      labels:
+       - "traefik.port=80"
+       - "traefik.backend=maintenance"
+       - "traefik.frontend.rule=PathPrefix:/"
+       - "traefik.frontend.entryPoints=http"
+       - "traefik.tags=web"
+       - "traefik.frontend.priority=5"
+      placement:
+        constraints: [node.role == worker] 
+    networks:
+      - traefik
+   
+networks:
+  webgateway:
+    driver: overlay
+   # external: true
+  traefik:
+    driver: overlay
+    driver_opts:
+      encrypted: "true"
