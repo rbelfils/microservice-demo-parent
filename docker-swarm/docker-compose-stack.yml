@@ -140,7 +140,7 @@ services:
       labels:
        - "traefik.port=80"
        - "traefik.backend=maintenance"
-       - "traefik.frontend.rule=Host:docker,*direct.labs.play-with-docker.com;PathPrefix:/"
+       - "traefik.frontend.rule=PathPrefix:/"
        - "traefik.frontend.entryPoints=http"
        - "traefik.tags=web"
        - "traefik.frontend.priority=5"
