@@ -60,7 +60,7 @@ services:
         - "traefik.port=8080"
         - "traefik.backend=rdv"
 #        - "traefik.frontend.rule=Host:docker;PathPrefixStrip:/micro-rdv/"
-        - "traefik.frontend.rule=Host:docker;PathPrefixStrip:/micro-rdv/"
+        - "traefik.frontend.rule=PathPrefixStrip:/micro-rdv/"
         - "traefik.frontend.entryPoints=http"
         - "traefik.tags=web"
       depends_on:
