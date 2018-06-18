@@ -42,7 +42,8 @@ services:
     labels:
       - "traefik.port=8080"
       - "traefik.backend=customer"
-      - "traefik.frontend.rule=Host:docker;PathPrefixStrip:/micro-customer/"
+#      - "traefik.frontend.rule=Host:docker;PathPrefixStrip:/micro-customer/"
+      - "traefik.frontend.rule=PathPrefixStrip:/micro-customer/"
       - "traefik.frontend.entryPoints=http"
       - "traefik.tags=web"
     depends_on:
@@ -58,6 +59,7 @@ services:
       labels:
         - "traefik.port=8080"
         - "traefik.backend=rdv"
+#        - "traefik.frontend.rule=Host:docker;PathPrefixStrip:/micro-rdv/"
         - "traefik.frontend.rule=Host:docker;PathPrefixStrip:/micro-rdv/"
         - "traefik.frontend.entryPoints=http"
         - "traefik.tags=web"
