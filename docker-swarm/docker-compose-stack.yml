@@ -2,8 +2,8 @@ version: '3.4'
 services:
   zookeeper:
     image: wurstmeister/zookeeper:3.4.6
-    deploy:
-      placement:
+    # deploy:
+      # placement:
 #        constraints: [node.role == worker] 
     networks:
       - traefik
@@ -11,8 +11,8 @@ services:
     image: wurstmeister/kafka:1.1.0
     links:
      - zookeeper
-    deploy:
-      placement:
+    # deploy:
+      # placement:
  #       constraints: [node.role == worker] 
     environment:
       KAFKA_ADVERTISED_HOST_NAME: kafka
@@ -24,8 +24,8 @@ services:
   traefik:
     image: traefik:swarm
     build: traefik
-    deploy:
-      placement:
+    # deploy:
+      # placement:
  #       constraints: [node.role == manager] 
    # command: -c /dev/null --web --docker --docker.usebindportip --docker.swarmmode --logLevel=DEBUG
     #command: -c /dev/null --web --docker --docker.swarmmode --logLevel=DEBUG
@@ -40,8 +40,8 @@ services:
   mysql:
     build: mysql
     image: mysql:swarm
-    deploy:
-      placement:
+    # deploy:
+      # placement:
 #        constraints: [node.role == worker] 
     environment:
      MYSQL_ROOT_PASSWORD: "password"
@@ -53,8 +53,8 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     # docker pull phpmyadmin/phpmyadmin:latest
-    deploy:
-      placement:
+    # deploy:
+      # placement:
  #     constraints: [node.role == worker] 
     environment:
      # PMA_ARBITRARY: 1
@@ -70,8 +70,8 @@ services:
       - "8282:8080"
   adminer:
     image: adminer
-    deploy:
-      placement:
+    # deploy:
+      # placement:
 #        constraints: [node.role == worker] 
     networks:
      - traefik
@@ -98,7 +98,7 @@ services:
        - "traefik.backend.healthcheck.port=8080"
        - "traefik.backend.healthcheck.interval=5s"
        - "traefik.frontend.priority=10"
-      placement:
+      # placement:
  #       constraints: [node.role == worker] 
     networks:
       - traefik
@@ -116,7 +116,7 @@ services:
        - "traefik.frontend.entryPoints=http"
        - "traefik.tags=web"
        - "traefik.frontend.priority=10"
-      placement:
+      # placement:
 #        constraints: [node.role == worker] 
     networks:
       - traefik
@@ -129,8 +129,8 @@ services:
      - "/var/run/docker.sock:/var/run/docker.sock"
     ports:
      - "8181:8080"
-    deploy:
-      placement:
+    # deploy:
+      # placement:
 #        constraints: [node.role == manager] 
     networks:
      - webgateway
@@ -144,7 +144,7 @@ services:
        - "traefik.frontend.entryPoints=http"
        - "traefik.tags=web"
        - "traefik.frontend.priority=5"
-      placement:
+      # placement:
 #        constraints: [node.role == worker] 
     networks:
       - traefik
