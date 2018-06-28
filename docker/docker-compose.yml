@@ -14,14 +14,6 @@ services:
       KAFKA_ADVERTISED_PORT: 9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "customer:5:1"
-#  apache:
-#    build: apache
-#    links:
-#     - order
-#     - shipping
-#     - invoicing
-#    ports:
-#     - "8080:80"
   traefik:
     image: traefik
     build: traefik
@@ -47,16 +39,15 @@ services:
      - mysql
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-    #ports:
-     # - "0.0.0.0:8080:8080"
     labels:
+      - "traefik.port=8080"
       - "traefik.backend=customer"
-      - "traefik.frontend.rule=Host:docker;PathPrefixStrip:/micro-customer/"
+#      - "traefik.frontend.rule=Host:docker;PathPrefixStrip:/micro-customer/"
+      - "traefik.frontend.rule=PathPrefixStrip:/micro-customer/"
       - "traefik.frontend.entryPoints=http"
       - "traefik.tags=web"
     depends_on:
      - mysql
-
   rdv:
       build: ../microservice-demo-create-rdv
       restart: on-failure
@@ -65,11 +56,11 @@ services:
        - mysql
       environment:
         SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      #ports:
-       # - "0.0.0.0:8181:8080"
       labels:
+        - "traefik.port=8080"
         - "traefik.backend=rdv"
-        - "traefik.frontend.rule=Host:docker;PathPrefixStrip:/micro-rdv/"
+#        - "traefik.frontend.rule=Host:docker;PathPrefixStrip:/micro-rdv/"
+        - "traefik.frontend.rule=PathPrefixStrip:/micro-rdv/"
         - "traefik.frontend.entryPoints=http"
         - "traefik.tags=web"
       depends_on:
