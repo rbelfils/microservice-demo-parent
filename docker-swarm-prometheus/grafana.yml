@@ -1,0 +1,98 @@
+version: '3.6'
+services:
+  traefik:
+    image: traefik:latest
+    deploy:
+      placement:
+        constraints: [node.role == manager] 
+    command: -c /dev/null --web --docker --docker.usebindportip --docker.swarmmode --logLevel=DEBUG
+   # command: -c /dev/null --web --docker --docker.swarmmode --logLevel=DEBUG
+    ports:
+      - '80:80'
+      - '8080:8080'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - webgateway
+      - traefik
+  node-exporter:
+    image: prom/node-exporter:latest
+    ports:
+      - '9100:9100'
+    volumes:
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+      - /proc:/host/proc:ro
+    networks:
+      - traefik
+    deploy:
+      mode: global
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    command:
+    - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+    - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+        - traefik
+    deploy:
+        mode: replicated
+        replicas: 1
+        resources:
+            limits:
+                cpus: '0.50'
+                memory: 1024M
+            reservations:
+                cpus: '0.50'
+                memory: 128M
+    depends_on:
+    - cadvisor
+  cadvisor:
+    image: google/cadvisor:latest
+    #name: cadvisor
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - traefik
+    deploy:
+      mode: global
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 128M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
+  grafana:
+    image: grafana/grafana
+    restart: always
+    ports:
+    - 3000:3000
+    networks:
+      - webgateway
+      - traefik
+    volumes:
+    - ./grafana/data:/var/lib/grafana:rw
+    environment:
+      GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource"
+      GF_SERVER_ROOT_URL: "http://docker/"
+      GF_SERVER_DOMAIN: docker
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 64M
+        reservations:
+          cpus: '0.50'
+          memory: 32M
+networks:
+  webgateway:
+    driver: overlay
+  traefik:
+    driver: overlay

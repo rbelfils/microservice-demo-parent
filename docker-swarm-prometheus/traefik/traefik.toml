@@ -1,0 +1,33 @@
+constraints = ["tag==web"]
+logLevel = "DEBUG"
+#Filtre sur les instances docker
+# Enable Web Dashboard
+[web]
+address = ":8080"
+
+
+
+defaultEntryPoints = ["http"]
+[entryPoints]
+  [entryPoints.http]
+   address = ":80"
+
+
+# Enable Docker configuration backend
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "docker"
+watch = true
+swarmmode = true
+
+[backends]
+  [backends.customer]
+    [backends.customer.healthcheck]
+        path = "/health"
+        interval = "10s"
+        port = 8080
+  [backends.rdv]
+    [backends.rdv.healthcheck]
+        path = "/health"
+        interval = "10s"
+        port = 8080
