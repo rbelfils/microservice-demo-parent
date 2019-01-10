@@ -79,7 +79,9 @@ services:
       - "8383:8080"
 
   customer:
-    build: ../microservice-demo-create-customer
+    build: 
+      context: ../
+      dockerfile: ./microservice-demo-create-customer/Dockerfile
     image: localhost:5000/customer:swarm 
     restart: on-failure
     environment:
@@ -103,7 +105,9 @@ services:
     networks:
       - traefik
   rdv:
-    build: ../microservice-demo-create-rdv
+    build: 
+      context: ../
+      dockerfile: ./microservice-demo-create-rdv/Dockerfile
     image: localhost:5000/rdv:swarm
     restart: on-failure
     environment:
