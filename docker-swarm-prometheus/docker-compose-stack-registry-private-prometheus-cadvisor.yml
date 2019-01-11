@@ -22,13 +22,13 @@ services:
     networks:
       - traefik
   traefik:
-    image: traefik:latest
+    image: localhost:5000/traefik:swarm
     build: traefik
     deploy:
       placement:
         constraints: [node.role == manager] 
-    command: -c /dev/null --web --docker --docker.usebindportip --docker.swarmmode --logLevel=DEBUG
-   # command: -c /dev/null --web --docker --docker.swarmmode --logLevel=DEBUG
+   # command: -c /dev/null --web --docker --docker.usebindportip --docker.swarmmode --logLevel=DEBUG
+    #command: -c /dev/null --web --docker --docker.swarmmode --logLevel=DEBUG
     ports:
       - '80:80'
       - '8080:8080'
@@ -61,7 +61,9 @@ services:
       - "8383:8080"
 
   customer:
-    build: ../microservice-demo-create-customer
+    build: 
+      context: ../
+      dockerfile: ./microservice-demo-create-customer/Dockerfile
     image: localhost:5000/customer:swarm 
     restart: on-failure
     environment:
@@ -85,7 +87,9 @@ services:
     networks:
       - traefik
   rdv:
-    build: ../microservice-demo-create-rdv
+    build: 
+      context: ../
+      dockerfile: ./microservice-demo-create-rdv/Dockerfile
     image: localhost:5000/rdv:swarm
     restart: on-failure
     environment:
