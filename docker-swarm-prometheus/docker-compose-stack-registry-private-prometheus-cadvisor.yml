@@ -195,11 +195,11 @@ services:
       - webgateway
       - traefik
     volumes:
-    - ./grafana/data:/var/lib/grafana:rw
+    - grafana-data:/var/lib/grafana:rw
     environment:
-      GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource"
-      GF_SERVER_ROOT_URL: "http://docker/"
-      GF_SERVER_DOMAIN: docker
+#      GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource"
+#      GF_SERVER_ROOT_URL: "http://docker/"
+#      GF_SERVER_DOMAIN: docker
     deploy:
       mode: replicated
       replicas: 1
@@ -220,7 +220,8 @@ services:
 #      - /proc:/host/proc
 #      - /sys:/host/sys
 #      - /:/rootfs
-
+volumes:
+  grafana-data: {}
 networks:
   webgateway:
     driver: overlay
