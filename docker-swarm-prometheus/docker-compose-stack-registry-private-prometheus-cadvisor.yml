@@ -190,7 +190,8 @@ services:
     image: grafana/grafana
     restart: always
     ports:
-    - 3000:3000
+      - 3000:3000
+	user: "472"
     networks:
       - webgateway
       - traefik
