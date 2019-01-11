@@ -191,7 +191,7 @@ services:
     restart: always
     ports:
       - 3000:3000
-	user: "472"
+    user: "472"
     networks:
       - webgateway
       - traefik
