@@ -7,10 +7,12 @@ address = ":8080"
 
 
 
+
 defaultEntryPoints = ["http"]
 [entryPoints]
   [entryPoints.http]
    address = ":80"
+   compress = true
 
 
 # Enable Docker configuration backend
