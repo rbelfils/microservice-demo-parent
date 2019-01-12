@@ -197,10 +197,9 @@ services:
       - traefik
     volumes:
     - grafana-data:/var/lib/grafana:rw
-#    environment:
-#      GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource"
-#      GF_SERVER_ROOT_URL: "http://docker/"
-#      GF_SERVER_DOMAIN: docker
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+      - GF_SERVER_ROOT_URL=http://%(domain)s/grafana/
     deploy:
       mode: replicated
       replicas: 1
@@ -211,6 +210,13 @@ services:
         reservations:
           cpus: '0.50'
           memory: 32M
+      labels:
+       - "traefik.port=3000"
+       - "traefik.backend=grafana"
+       - "traefik.frontend.rule=PathPrefix:/grafana/"
+       - "traefik.frontend.entryPoints=http"
+       - "traefik.tags=web"
+       - "traefik.frontend.priority=10"
 
 #node-exporter:
 #    image: quay.io/prometheus/node-exporter
