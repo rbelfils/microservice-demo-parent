@@ -189,8 +189,6 @@ services:
   grafana:
     image: grafana/grafana
     restart: always
-    ports:
-      - 3000:3000
     user: "472"
     networks:
       - webgateway
@@ -203,9 +201,19 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+  nginx-admin:
+    build: nginx
+    image: localhost:5000/nginx-admin:swarm
+    restart: always
+    networks:
+      - webgateway
+      - traefik
+    deploy:
+      mode: replicated
+      replicas: 1
       labels:
-       - "traefik.port=3000"
-       - "traefik.backend=grafana"
+       - "traefik.port=8003"
+       - "traefik.backend=nginx-admin"
        - "traefik.frontend.rule=PathPrefix:/grafana/"
        - "traefik.frontend.entryPoints=http"
        - "traefik.tags=web"
