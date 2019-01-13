@@ -203,13 +203,6 @@ services:
     deploy:
       mode: replicated
       replicas: 1
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 64M
-        reservations:
-          cpus: '0.50'
-          memory: 32M
       labels:
        - "traefik.port=3000"
        - "traefik.backend=grafana"
@@ -217,16 +210,6 @@ services:
        - "traefik.frontend.entryPoints=http"
        - "traefik.tags=web"
        - "traefik.frontend.priority=10"
-
-#node-exporter:
-#    image: quay.io/prometheus/node-exporter
-#    container_name: node-exporter
-#    ports:
-#      - 9100:9100
-#    volumes:
-#      - /proc:/host/proc
-#      - /sys:/host/sys
-#      - /:/rootfs
 volumes:
   grafana-data: {}
 networks:
@@ -235,5 +218,4 @@ networks:
    # external: true
   traefik:
     driver: overlay
-    driver_opts:
-      encrypted: "true"
+
