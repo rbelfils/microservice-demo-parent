@@ -56,3 +56,23 @@ executer la commande suivante (`kafka-console-consumer.sh --bootstrap-server kaf
     [POST]
     - http://docker/micro-rdv/rdvs
  
+# Lancement sur play with docker seulement la version prometheus + grafana (3 Manager + 2 Worker)
+
+docker service create --name registry --publish 5000:5000 registry:2 \
+&& git clone https://github.com/rbelfils/microservice-demo-parent \
+&& git clone https://github.com/EdevMosaic/docker-maintenance-page \
+&& cd docker-maintenance-page \
+&& docker build . -t localhost:5000/nginx:maintenance \
+&& docker push localhost:5000/nginx:maintenance \
+&& cd ../microservice-demo-parent \
+&& git checkout microservice-with-prometheus \
+&& git pull \
+&& cd docker-swarm-prometheus \
+&& docker-compose -f docker-compose-stack-registry-private-prometheus-cadvisor.yml build \
+&& docker-compose -f docker-compose-stack-registry-private-prometheus-cadvisor.yml push rdv \
+&& docker-compose -f docker-compose-stack-registry-private-prometheus-cadvisor.yml push customer \
+&& docker-compose -f docker-compose-stack-registry-private-prometheus-cadvisor.yml push mysql \
+&& docker-compose -f docker-compose-stack-registry-private-prometheus-cadvisor.yml push nginx-admin \
+&& docker stack deploy -c  docker-compose-stack-registry-private-prometheus-cadvisor.yml demo
+
+TODO : Remplacer Visualizer par portainer
