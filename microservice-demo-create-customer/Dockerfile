@@ -8,7 +8,7 @@ WORKDIR $TARGET_BUILD
 RUN mvn clean package
 
 
-FROM frolvlad/alpine-oraclejdk8:latest
+FROM frolvlad/alpine-java:jre8-slim
 EXPOSE 8080
 ARG TARGET_BUILD=/tmp/microservice-demo-create-customer
 COPY --from=MAVEN_TOOL_CHAIN $TARGET_BUILD/target/microservice-demo-create-customer-0.0.1-SNAPSHOT.jar .
