@@ -7,7 +7,7 @@ COPY microservice-demo-create-rdv/src $TARGET_BUILD/src/
 WORKDIR $TARGET_BUILD
 RUN mvn clean package
 
-FROM frolvlad/alpine-oraclejdk8:latest
+FROM frolvlad/alpine-java:jre8-slim
 ARG TARGET_BUILD=/tmp/microservice-demo-create-rdv
 EXPOSE 8080
 COPY --from=MAVEN_TOOL_CHAIN $TARGET_BUILD/target/microservice-demo-create-rdv-0.0.1-SNAPSHOT.jar .
