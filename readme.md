@@ -75,4 +75,6 @@ docker service create --name registry --publish 5000:5000 registry:2 \
 && docker-compose -f docker-compose-stack-registry-private-prometheus-cadvisor.yml push nginx-admin \
 && docker stack deploy -c  docker-compose-stack-registry-private-prometheus-cadvisor.yml demo
 
+- Utiliser le dashboard cadvisor : 193
+
 TODO : Remplacer Visualizer par portainer
