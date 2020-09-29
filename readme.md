@@ -60,7 +60,7 @@ executer la commande suivante (`kafka-console-consumer.sh --bootstrap-server kaf
 
 docker service create --name registry --publish 5000:5000 registry:2 \
 && git clone https://github.com/rbelfils/microservice-demo-parent \
-&& git clone https://github.com/EdevMosaic/docker-maintenance-page \
+&& git clone https://github.com/rbelfils/docker-maintenance-page \
 && cd docker-maintenance-page \
 && docker build . -t localhost:5000/nginx:maintenance \
 && docker push localhost:5000/nginx:maintenance \
